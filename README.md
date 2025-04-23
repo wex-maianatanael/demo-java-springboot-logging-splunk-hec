@@ -18,3 +18,9 @@ You'll need to set up the splunk hec index, just like this:
 
 ### Java app
 In order to run the java api locall, firstly you'll need to restore all the dependencies (maven/pom.xml), then build and run the app.
+
+### Stopping containers
+Once you're done with the tests, just run:
+```shell
+docker compose down
+```
