@@ -1,0 +1,54 @@
+<configuration>
+
+    <property name="APP" value="${spring.application.name:-default}" />
+    <property name="ENV" value="${spring.profiles.active:-default}" />
+
+    <appender name="SPLUNK" class="com.splunk.logging.HttpEventCollectorLogbackAppender">
+        <url>http://localhost:18088</url>
+        <token>10e77cb3-8c29-4e7b-a9d5-79bcfe013a57</token>
+        <index>demo-app-local</index>
+        <source>${APP}</source>
+        <sourcetype>_json</sourcetype>
+        <disableCertificateValidation>true</disableCertificateValidation>
+        <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+            <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter"/>
+            <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS Z</timestampFormat>
+            <appendLineSeparator>true</appendLineSeparator>
+        </layout>
+    </appender>
+
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <fieldName>timestamp</fieldName>
+                </timestamp>
+                <logLevel>
+                    <fieldName>level</fieldName>
+                </logLevel>
+                <loggerName>
+                    <fieldName>logger</fieldName>
+                </loggerName>
+                <threadName>
+                    <fieldName>thread</fieldName>
+                </threadName>
+                <!-- mdc data -->
+                <mdc/>
+                <message/>
+                <!-- Stacktrace if exists -->
+                <stackTrace/>
+            </providers>
+            <globalCustomFields>{"app":"${APP}","env":"${ENV}"}</globalCustomFields>
+        </encoder>
+    </appender>
+
+    <logger name="com.splunk.hec.logging" level="DEBUG">
+        <appender-ref ref="JSON_CONSOLE"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="JSON_CONSOLE"/>
+        <appender-ref ref="SPLUNK"/>
+    </root>
+
+</configuration>

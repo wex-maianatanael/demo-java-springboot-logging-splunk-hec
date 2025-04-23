@@ -1,0 +1,20 @@
+services:
+  splunk:
+    image: splunk/splunk:latest
+    container_name: splunk
+    environment:
+      SPLUNK_START_ARGS: "--accept-license"
+      SPLUNK_PASSWORD: "changeme"
+      SPLUNK_HEC_TOKEN: "10e77cb3-8c29-4e7b-a9d5-79bcfe013a57"
+    ports:
+      - "18000:8000" # UI
+      - "18088:8088" # HEC
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - /opt/splunk/var
+      - /opt/splunk/etc
+      - ./splunk.yaml:/tmp/defaults/default.yml
