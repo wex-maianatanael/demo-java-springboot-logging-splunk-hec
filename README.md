@@ -1,4 +1,4 @@
-# demo-logging-splunk-hec
+# demo-java-springboot-logging-splunk-hec
 How to use Splunk HECs to ingest structured logs.
 
 ## Running the app locally
