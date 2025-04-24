@@ -1,6 +1,6 @@
-package com.splunk.hec.logging.controller;
+package com.splunk.hec.logging.controllers;
 
-import lombok.RequiredArgsConstructor;
+import com.splunk.hec.logging.services.HelloServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,8 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
 public class HelloController {
+
+    public final HelloServiceImpl service;
+
+    public HelloController(HelloServiceImpl service) {
+        this.service = service;
+    }
 
     @GetMapping("/hello")
     public String sayHello() {
@@ -29,5 +34,11 @@ public class HelloController {
             log.error("Forced error for testing", e);
             return e.getMessage();
         }
+    }
+
+    @GetMapping("/service")
+    public String callService(){
+        log.info("passing by controller");
+        return service.callService();
     }
 }
